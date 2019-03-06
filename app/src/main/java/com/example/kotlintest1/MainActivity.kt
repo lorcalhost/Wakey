@@ -11,11 +11,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.provider.Settings
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.nfc.NfcAdapter
 import android.nfc.NfcManager
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         try{
-            if (event!!.values[0] < 30 && isRunning == false){
+            if (event!!.values[0] < 8 && isRunning == false){
                 isRunning = false
                 myBackground.setBackgroundColor(Color.rgb(0,0,0))
                 NFCsupport.setTextColor(Color.rgb(255, 255, 255))
