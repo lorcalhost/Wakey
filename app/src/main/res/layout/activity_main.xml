@@ -15,28 +15,16 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="117dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="65dp"
             android:contentDescription="@string/cuteface" android:scaleType="fitCenter"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/NFCsupport" android:visibility="visible"
-            android:layout_marginBottom="24dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/blackpp" android:fontFamily="sans-serif-black" android:textSize="15sp"
-            android:textAlignment="center"
-            android:text="NFC supported\nMake sure to enable it in the device's settings"
-            tools:text="NFC supported\nMake sure to enable it in the device's settings"/>
     <Button
             android:text="Enable NFC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnNFCsettings" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/cuteFace" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/NFCsupport" app:layout_constraintVertical_bias="0.120000005"
+            android:id="@+id/btnNFCsettings" android:layout_marginTop="172dp"
+            app:layout_constraintTop_toBottomOf="@+id/cuteFace"
             style="@style/Widget.AppCompat.Button.Small" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:elevation="0dp" android:visibility="invisible"
-            android:textAlignment="center"/>
+            android:textAlignment="center" app:layout_constraintHorizontal_bias="0.498"/>
     <TextView
             android:text="NFC not enabled"
             android:layout_width="wrap_content"
@@ -46,6 +34,50 @@
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/cuteFace" app:layout_constraintVertical_bias="1.0"
-            android:visibility="invisible" android:textAlignment="center"/>
+            android:visibility="invisible" android:textAlignment="center" app:layout_constraintHorizontal_bias="0.501"/>
+
+    <Button
+            android:id="@+id/btnSettings" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.958" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="?attr/imageButtonStyle" android:background="@drawable/settings"
+            android:layout_height="40dp" android:layout_width="40dp"/>
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="444dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/clockView" android:visibility="invisible" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.668">
+
+        <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:headerBackground="@color/invisible"
+                android:numbersSelectorColor="@color/backgroundColor"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+        <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnDone" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/timePicker" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:background="@drawable/verified"/>
+        <TextView
+                android:text="Setup Alarm:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.064"
+                android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="sans-serif-black" android:textStyle="bold" android:textSize="20sp"
+                android:textColor="@android:color/white"/>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

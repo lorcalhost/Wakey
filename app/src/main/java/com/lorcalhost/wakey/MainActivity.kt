@@ -1,5 +1,6 @@
 package com.lorcalhost.wakey
 
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -17,8 +18,11 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
+import android.widget.TimePicker
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -29,6 +33,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private var nfcAdapter : NfcAdapter? = null
     private var nfcPendingIntent: PendingIntent? = null
+
+    private var alarmTimePicker: TimePicker? = null
+    private var pendingIntent: PendingIntent? = null
+    private var alarmManager: AlarmManager? = null
+    private var isAlarmSet = false
 
     private var currentWhiteFace = R.drawable.facecute2w
     private var currentBlackFace = R.drawable.facecute2
@@ -47,6 +56,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             processIntent(intent)
         }
 
+        alarmTimePicker = findViewById<TimePicker>(R.id.timePicker)
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
 
         myBackground.setBackgroundColor(Color.rgb(200,224,236))
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -59,7 +71,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             showNFCSettings()
             NFCstatus.visibility = View.INVISIBLE
             btnNFCsettings.visibility = View.INVISIBLE
-
+        }
+        btnSettings.setOnClickListener {
+            btnSettings.visibility = View.INVISIBLE
+            clockView.visibility = View.VISIBLE
+            if(isAlarmSet){
+                alarmManager!!.cancel(pendingIntent)
+            }
+            isAlarmSet = false
+        }
+        btnDone.setOnClickListener {
+            btnSettings.visibility = View.VISIBLE
+            clockView.visibility = View.INVISIBLE
+            startAlarm()
+            isAlarmSet = true
         }
 
     }
@@ -69,17 +94,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event!!.values[0] < 10){
+        if (event!!.values[0] < 8){
             isFaceWhite = true
             myBackground.setBackgroundColor(Color.rgb(0,0,0))
             NFCstatus.setTextColor(Color.rgb(255, 255, 255))
             cuteFace.setImageResource(currentWhiteFace)
+            btnSettings.setBackgroundResource(R.drawable.settingsw)
         }
         else {
             isFaceWhite = false
             myBackground.setBackgroundColor(Color.rgb(200,224,236))
             NFCstatus.setTextColor(Color.rgb(0, 0, 0))
             cuteFace.setImageResource(currentBlackFace)
+            btnSettings.setBackgroundResource(R.drawable.settings)
         }
 
 
@@ -122,6 +149,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             cuteFace.setImageResource(currentBlackFace)
                         }
 
+                    } else if (ndefRecord.toUri().toString() == "bathroom"){
+                        alarmManager!!.cancel(pendingIntent)
+                        exitProcess(-1)
                     }
                     else {
                         Toast.makeText(this, "NFC tag not recognized", Toast.LENGTH_SHORT).show()
@@ -133,7 +163,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    private fun startAlarm() {
 
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker!!.currentHour)
+        calendar.set(Calendar.MINUTE, alarmTimePicker!!.currentMinute)
+        val intent = Intent(this, AlarmReceiver::class.java)
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+
+        var time = calendar.timeInMillis - calendar.timeInMillis % 60000
+
+        if (System.currentTimeMillis() > time) {
+            if (Calendar.AM_PM === 0)
+                time += 1000 * 60 * 60 * 12
+            else
+                time += time + 1000 * 60 * 60 * 24
+        }
+        alarmManager!!.set(AlarmManager.RTC, time, pendingIntent);
+        Toast.makeText(this, "Alarm successfully set", Toast.LENGTH_SHORT).show()
+    }
 
     private fun checkNFCStatus(){
         val isNfcSupported: Boolean = nfcAdapter != null
